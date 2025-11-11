@@ -10,6 +10,12 @@
       <div id="quoteDisplay"></div>
       <button id="newQuote">Show New Quote</button>
 
+      <div id="jsonActions" class="json-actions">
+          <button id="exportBtn">Export Quotes</button>
+          <label for="importFile" class="import-label">Import Quotes (JSON)</label>
+          <input type="file" id="importFile" accept="application/json" style="display:none;">
+      </div>
+
       <div>
       <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
       <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
@@ -30,4 +36,5 @@
       <script src="script.js"></script>
     </body>
   
+
   </html>
