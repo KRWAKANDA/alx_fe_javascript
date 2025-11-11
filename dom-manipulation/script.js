@@ -423,4 +423,11 @@ addQuoteBtn.addEventListener("click", addQuote);
 // Fetch quotes on page load
 fetchQuotesFromServer();
 
+// Function to sync quotes (placeholder for future implementation)
+function syncQuotes() {
+  console.log("Quotes synchronized with server (placeholder function).");
+}
+
+
+
 
