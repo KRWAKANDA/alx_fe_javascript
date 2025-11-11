@@ -428,6 +428,12 @@ function syncQuotes() {
   console.log("Quotes synchronized with server (placeholder function).");
 }
 
+function syncQuotes() {
+  console.log("Quotes synced with server!");
+}
+
+
+
 
 
 
