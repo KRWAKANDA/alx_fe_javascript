@@ -126,6 +126,55 @@ function createAddQuoteForm() {
   });
 }
 
+// === JSON Import / Export ===
+function exportQuotes() {
+  const dataStr = JSON.stringify(quotes, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "quotes.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importQuotes(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) throw new Error("Invalid format");
+
+      quotes = [...quotes, ...imported.map(q => ({
+        ...q,
+        id: q.id || uid(),
+        updatedAt: q.updatedAt || nowISO()
+      }))];
+      saveLocalQuotes();
+      populateCategories();
+      filterQuotes();
+      alert("✅ Quotes imported successfully!");
+    } catch {
+      alert("❌ Invalid JSON file!");
+    }
+  };
+  reader.readAsText(file);
+}
+
+// Attach events after DOM loads
+window.addEventListener("DOMContentLoaded", () => {
+  const exportBtn = document.getElementById("exportBtn");
+  const importFile = document.getElementById("importFile");
+
+  if (exportBtn) exportBtn.addEventListener("click", exportQuotes);
+  if (importFile) importFile.addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (file) importQuotes(file);
+  });
+});
+
+
 // === Server Sync Helpers ===
 async function fetchServerQuotes() {
   const res = await fetch(SERVER_URL);
@@ -277,3 +326,4 @@ window.addEventListener("DOMContentLoaded", () => {
   startPolling();
   syncFromServer();
 });
+
