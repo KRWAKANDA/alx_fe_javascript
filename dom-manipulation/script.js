@@ -327,3 +327,100 @@ window.addEventListener("DOMContentLoaded", () => {
   syncFromServer();
 });
 
+// Initial array of quote objects (will be replaced by fetchQuotesFromServer)
+let quotes = [];
+
+// Get references to DOM elements
+const quoteDisplay = document.getElementById("quoteDisplay");
+const newQuoteBtn = document.getElementById("newQuote");
+const addQuoteBtn = document.getElementById("addQuoteBtn");
+const newQuoteText = document.getElementById("newQuoteText");
+const newQuoteCategory = document.getElementById("newQuoteCategory");
+
+/**
+ * Simulates fetching quotes from a server (mock API call)
+ * In a real app, this could be: fetch("https://example.com/api/quotes")
+ */
+async function fetchQuotesFromServer() {
+  try {
+    // Simulated data fetch with Promise
+    const response = await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve([
+          { text: "The best way to get started is to quit talking and begin doing.", category: "Motivation" },
+          { text: "Life is what happens when you're busy making other plans.", category: "Life" },
+          { text: "Success is not in what you have, but who you are.", category: "Success" },
+          { text: "Your time is limited, so don’t waste it living someone else’s life.", category: "Inspiration" }
+        ]);
+      }, 500); // simulate network delay
+    });
+
+    quotes = response;
+    showRandomQuote(); // show one quote after fetching
+  } catch (error) {
+    console.error("Error fetching quotes:", error);
+    quoteDisplay.textContent = "Failed to load quotes from server.";
+  }
+}
+
+// Function to display a random quote
+function showRandomQuote() {
+  if (quotes.length === 0) {
+    quoteDisplay.innerHTML = "No quotes available. Add some!";
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const randomQuote = quotes[randomIndex];
+
+  // Clear existing content
+  quoteDisplay.innerHTML = "";
+
+  // Create new quote elements dynamically
+  const quoteTextEl = document.createElement("p");
+  quoteTextEl.textContent = `"${randomQuote.text}"`;
+  quoteTextEl.style.fontSize = "1.2em";
+  quoteTextEl.style.color = "#333";
+
+  const categoryEl = document.createElement("div");
+  categoryEl.textContent = `— ${randomQuote.category}`;
+  categoryEl.classList.add("category");
+
+  // Append new elements to DOM
+  quoteDisplay.appendChild(quoteTextEl);
+  quoteDisplay.appendChild(categoryEl);
+}
+
+// Function to add a new quote dynamically
+function addQuote() {
+  const text = newQuoteText.value.trim();
+  const category = newQuoteCategory.value.trim();
+
+  if (text === "" || category === "") {
+    alert("Please enter both a quote and a category!");
+    return;
+  }
+
+  // Add new quote object
+  quotes.push({ text, category });
+
+  // Update the DOM instantly to confirm addition
+  const confirmation = document.createElement("p");
+  confirmation.textContent = `✅ New quote added in "${category}" category.`;
+  confirmation.style.color = "green";
+  quoteDisplay.innerHTML = "";
+  quoteDisplay.appendChild(confirmation);
+
+  // Clear form fields
+  newQuoteText.value = "";
+  newQuoteCategory.value = "";
+}
+
+// Event listeners for buttons
+newQuoteBtn.addEventListener("click", showRandomQuote);
+addQuoteBtn.addEventListener("click", addQuote);
+
+// Fetch quotes on page load
+fetchQuotesFromServer();
+
+
